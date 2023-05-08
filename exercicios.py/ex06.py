@@ -16,12 +16,15 @@
     
     
 num = input('numero ')
-
-if "." in num:
-    num = float(num) 
-    print(f'o número {num} não é inteiro')       
-else:
-    num = int (num)
-    print(f'o número {num} é um inteiro')
+try:
+    
+    if "." in num:
+        num = float(num)
+        print(f'o número {num} não é inteiro')
+    else:
+        num = int (num)
+        print(f'o número {num} é um inteiro')
+except:
+        print(f'entrada inválida')
     
 
