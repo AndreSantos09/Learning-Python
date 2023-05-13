@@ -6,4 +6,5 @@ def multiplicar(*args):
         total *= numero
     return total
 
-print(multiplicar(1,2,3))
+
+print(multiplicar(1, 2, 3))
