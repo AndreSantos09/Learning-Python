@@ -2,5 +2,9 @@
     "python.analysis.typeCheckingMode": "basic",
     "code-runner.runInTerminal": true,
     "code-runner.ignoreSelection": true,
-    "terminal.integrated.fontFamily": ""
+    "terminal.integrated.fontFamily": "",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "python.formatting.provider": "none"
 }
