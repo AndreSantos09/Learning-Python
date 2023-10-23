@@ -28,6 +28,17 @@ locomotivas = []
 vagoes = []
 composicoes = []
 
+# Função para exibir o menu
+def exibir_menu():
+    print("Menu:")
+    print("1. Listar locomotivas")
+    print("2. Listar tipos de vagões com produtos transportados")
+    print("3. Listar todas as composições")
+    print("4. Listar composições por locomotiva")
+    print("5. Listar trajetos das composições")
+    print("6. Contar quantidade de produtos transportados por mês")
+    print("7. Sair")
+
 # Função para listar locomotivas
 def listar_locomotivas():
     for locomotiva in locomotivas:
@@ -134,16 +145,26 @@ if __name__ == "__main__":
     # Adicionar vagões às composições
     adicionar_vagao_a_composicao(101, "Vagão A", "Produto X")
     adicionar_vagao_a_composicao(103, "Vagão C", "Produto X")
+    
+    while True:
+        exibir_menu()
+        escolha = input("Escolha uma opção: ")
 
-    # Listar informações
-    listar_locomotivas()
-    print("\n")
-    listar_tipos_de_vagoes()
-    print("\n")
-    listar_composicoes()
-    print("\n")
-    listar_composicoes_por_locomotiva()
-    print("\n")
-    listar_trajetos()
-    print("\n")
-    contar_quantidade_de_produtos_por_mes()
+        if escolha == "1":
+            listar_locomotivas()
+        elif escolha == "2":
+            listar_tipos_de_vagoes()
+        elif escolha == "3":
+            listar_composicoes()
+        elif escolha == "4":
+            listar_composicoes_por_locomotiva()
+        elif escolha == "5":
+            listar_trajetos()
+        elif escolha == "6":
+            contar_quantidade_de_produtos_por_mes()
+        elif escolha == "7":
+            print("Saindo do programa.")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
