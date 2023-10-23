@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta  # Importe a classe datetime e timedelta
+from datetime import datetime
 
 class Locomotiva:
     def __init__(self, numero, modelo):
@@ -37,7 +37,32 @@ def exibir_menu():
     print("4. Listar composições por locomotiva")
     print("5. Listar trajetos das composições")
     print("6. Contar quantidade de produtos transportados por mês")
-    print("7. Sair")
+    print("7. Adicionar Locomotiva")
+    print("8. Adicionar Composição")
+    print("9. Adicionar Vagão")
+    print("10. Sair")
+
+# Função para adicionar locomotiva
+def adicionar_locomotiva():
+    numero = int(input("Número da locomotiva: "))
+    modelo = input("Modelo da locomotiva: ")
+    locomotiva = Locomotiva(numero, modelo)
+    locomotivas.append(locomotiva)
+    print(f"Locomotiva {numero} adicionada com sucesso!")
+
+# Função para adicionar composição
+def adicionar_composicao():
+    numero = int(input("Número da composição: "))
+    horario_inicio_str = input("Horário de Início (formato YYYY-MM-DD HH:MM): ")
+    horario_fim_str = input("Horário de Fim (formato YYYY-MM-DD HH:MM): ")
+    
+    horario_inicio = datetime.strptime(horario_inicio_str, "%Y-%m-%d %H:%M")
+    horario_fim = datetime.strptime(horario_fim_str, "%Y-%m-%d %H:%M")
+    
+    composicao = Composicao(numero, horario_inicio, horario_fim)
+    composicoes.append(composicao)
+    print(f"Composição {numero} adicionada com sucesso!")
+
 
 # Função para listar locomotivas
 def listar_locomotivas():
@@ -81,8 +106,12 @@ def adicionar_composicao_a_locomotiva(locomotiva_numero, composicao_numero):
                     return
     print("Locomotiva ou Composição não encontrada.")
 
-# Função para adicionar um vagão a uma composição
-def adicionar_vagao_a_composicao(composicao_numero, tipo, produto):
+# Função para adicionar vagão a composição
+def adicionar_vagao():
+    composicao_numero = int(input("Número da composição: "))
+    tipo = input("Tipo de vagão: ")
+    produto = input("Produto transportado: ")
+    
     for composicao in composicoes:
         if composicao.numero == composicao_numero:
             vagao = Vagao(tipo, produto)
@@ -125,27 +154,8 @@ def contar_quantidade_de_produtos_por_mes():
 
 # Exemplo de uso do sistema
 if __name__ == "__main__":
-    # Criar algumas locomotivas
-    locomotiva1 = Locomotiva(1, "Modelo A")
-    locomotiva2 = Locomotiva(2, "Modelo B")
-    locomotiva3 = Locomotiva(3, "Modelo C")
-    locomotivas.extend([locomotiva1, locomotiva2, locomotiva3])
-
-    # Criar algumas composições
-    composicao1 = Composicao(101, datetime(2023, 1, 10, 8, 0), datetime(2023, 1, 10, 12, 0))
-    composicao2 = Composicao(102, datetime(2023, 1, 15, 10, 0), datetime(2023, 1, 15, 14, 0))
-    composicao3 = Composicao(103, datetime(2023, 2, 5, 9, 0), datetime(2023, 2, 5, 13, 0))
-    composicoes.extend([composicao1, composicao2, composicao3])
-
-    # Adicionar composições às locomotivas
-    adicionar_composicao_a_locomotiva(1, 101)
-    adicionar_composicao_a_locomotiva(2, 102)
-    adicionar_composicao_a_locomotiva(3, 103)
-
-    # Adicionar vagões às composições
-    adicionar_vagao_a_composicao(101, "Vagão A", "Produto X")
-    adicionar_vagao_a_composicao(103, "Vagão C", "Produto X")
     
+
     while True:
         exibir_menu()
         escolha = input("Escolha uma opção: ")
@@ -163,6 +173,12 @@ if __name__ == "__main__":
         elif escolha == "6":
             contar_quantidade_de_produtos_por_mes()
         elif escolha == "7":
+            adicionar_locomotiva()
+        elif escolha == "8":
+            adicionar_composicao()
+        elif escolha == "9":
+            adicionar_vagao()
+        elif escolha == "10":
             print("Saindo do programa.")
             break
         else:
