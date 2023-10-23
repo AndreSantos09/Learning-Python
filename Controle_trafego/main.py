@@ -1,76 +1,24 @@
+import tkinter as tk
 from datetime import datetime
 from models import Locomotiva, Vagao, Composicao
-import curses
 
 locomotivas = []
 vagoes = []
 composicoes = []
 
-# Função para exibir o menu
+def exibir_menu(opcoes):
+    menu_window = tk.Tk()
+    menu_window.title("Sistema Ferroviário")
 
+    label = tk.Label(menu_window, text="Escolha uma opção:")
+    label.pack()
 
-def exibir_menu(stdscr, opcoes, escolha):
-    stdscr.clear()
-    h, w = stdscr.getmaxyx()
-    
-    stdscr.addstr(0, 0, "======================= Sistema Ferroviário =======================", curses.A_BOLD)
-    for i, opcao in enumerate(opcoes):
-        if i == escolha:
-            stdscr.attron(curses.color_pair(1))
-            stdscr.addstr(i + 2, 1, f"{i + 1}. {opcao}")
-            stdscr.attroff(curses.color_pair(1))
-        else:
-            stdscr.addstr(i + 2, 1, f"{i + 1}. {opcao}")
-    
-    stdscr.addstr(len(opcoes) + 2, 0, "====================================================================", curses.A_BOLD)
-    stdscr.refresh()
+    for i, opcao in enumerate(opcoes, 1):
+        button = tk.Button(menu_window, text=opcao, command=lambda op=opcao: opcoes[op]())
+        button.pack()
 
-def menu_interativo(opcoes):
-    curses.wrapper(main, opcoes)
+    menu_window.mainloop()
 
-def main(stdscr, opcoes):
-    curses.curs_set(0)
-    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-
-    escolha = 0
-    exibir_menu(stdscr, opcoes, escolha)
-
-    while True:
-        key = stdscr.getch()
-
-        if key == curses.KEY_UP and escolha > 0:
-            escolha -= 1
-        elif key == curses.KEY_DOWN and escolha < len(opcoes) - 1:
-            escolha += 1
-        elif key == 10:  # Tecla Enter
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"Opção selecionada: {opcoes[escolha]}")
-            stdscr.refresh()
-            stdscr.getch()
-            break
-
-        exibir_menu(stdscr, opcoes, escolha)
-
-def exibir_menu_principal():
-    opcoes = [
-        "Listar locomotivas",
-        "Listar tipos de vagões com produtos transportados",
-        "Listar todas as composições",
-        "Listar composições por locomotiva",
-        "Listar trajetos das composições",
-        "Contar quantidade de produtos transportados por mês",
-        "Adicionar Locomotiva",
-        "Adicionar Composição",
-        "Adicionar Vagão",
-        "Sair"
-    ]
-    menu_interativo(opcoes)
-
-if __name__ == "__main__":
-    exibir_menu_principal()
-
-
-# Função para listar locomotivas
 def listar_locomotivas():
     if locomotivas:
         print("\n=== Lista de Locomotivas ===")
@@ -79,20 +27,18 @@ def listar_locomotivas():
     else:
         print("Nenhuma locomotiva cadastrada.")
 
-# Função para listar tipos de vagões com produtos transportados
 def listar_tipos_de_vagoes():
     if vagoes:
         print("\n=== Tipos de Vagões e Produtos Transportados ===")
         tipos_de_vagoes = set()
         for vagao in vagoes:
             tipos_de_vagoes.add((vagao.tipo, vagao.produto))
-        
+
         for tipo, produto in tipos_de_vagoes:
             print(f"Tipo de Vagão: {tipo}, Produto Transportado: {produto}")
     else:
         print("Nenhum vagão cadastrado.")
 
-# Função para listar todas as composições
 def listar_composicoes():
     if composicoes:
         print("\n=== Lista de Composições ===")
@@ -106,7 +52,6 @@ def listar_composicoes():
     else:
         print("Nenhuma composição cadastrada.")
 
-# Função para listar composições por locomotiva
 def listar_composicoes_por_locomotiva():
     if locomotivas:
         print("\n=== Composições por Locomotiva ===")
@@ -120,33 +65,30 @@ def listar_composicoes_por_locomotiva():
     else:
         print("Nenhuma locomotiva cadastrada.")
 
-# Função para adicionar locomotiva
 def adicionar_locomotiva():
-    numero = int(input("Número da locomotiva: "))
+    numero = input("Número da locomotiva: ")
     modelo = input("Modelo da locomotiva: ")
     locomotiva = Locomotiva(numero, modelo)
     locomotivas.append(locomotiva)
     print(f"\nLocomotiva {numero} adicionada com sucesso!")
 
-# Função para adicionar composição
 def adicionar_composicao():
-    numero = int(input("Número da composição: "))
+    numero = input("Número da composição: ")
     horario_inicio_str = input("Horário de Início (formato YYYY-MM-DD HH:MM): ")
     horario_fim_str = input("Horário de Fim (formato YYYY-MM-DD HH:MM): ")
-    
+
     horario_inicio = datetime.strptime(horario_inicio_str, "%Y-%m-%d %H:%M")
     horario_fim = datetime.strptime(horario_fim_str, "%Y-%m-%d %H:%M")
-    
+
     composicao = Composicao(numero, horario_inicio, horario_fim)
     composicoes.append(composicao)
     print(f"\nComposição {numero} adicionada com sucesso!")
 
-# Função para adicionar vagão a composição
 def adicionar_vagao():
-    composicao_numero = int(input("Número da composição: "))
+    composicao_numero = input("Número da composição: ")
     tipo = input("Tipo de vagão: ")
     produto = input("Produto transportado: ")
-    
+
     for composicao in composicoes:
         if composicao.numero == composicao_numero:
             vagao = Vagao(tipo, produto)
@@ -156,7 +98,6 @@ def adicionar_vagao():
             return
     print("\nComposição não encontrada.")
 
-# Função para listar trajetos das composições
 def listar_trajetos():
     if composicoes:
         print("\n=== Trajetos das Composições ===")
@@ -170,7 +111,6 @@ def listar_trajetos():
     else:
         print("Nenhuma composição cadastrada.")
 
-# Função para contar a quantidade de produtos transportados por mês
 def contar_quantidade_de_produtos_por_mes():
     if composicoes:
         print("\n=== Quantidade de Produtos Transportados por Mês ===")
@@ -200,26 +140,18 @@ def contar_quantidade_de_produtos_por_mes():
     else:
         print("Nenhuma composição cadastrada.")
 
-
-# Dicionário de opções
 opcoes = {
-    "1": listar_locomotivas,
-    "2": listar_tipos_de_vagoes,
-    "3": listar_composicoes,
-    "4": listar_composicoes_por_locomotiva,
-    "5": listar_trajetos,
-    "6": contar_quantidade_de_produtos_por_mes,
-    "7": adicionar_locomotiva,
-    "8": adicionar_composicao,
-    "9": adicionar_vagao,
-    "10": lambda: print("Saindo do programa.")
+    "Listar locomotivas": listar_locomotivas,
+    "Listar tipos de vagões com produtos transportados": listar_tipos_de_vagoes,
+    "Listar todas as composições": listar_composicoes,
+    "Listar composições por locomotiva": listar_composicoes_por_locomotiva,
+    "Listar trajetos das composições": listar_trajetos,
+    "Contar quantidade de produtos transportados por mês": contar_quantidade_de_produtos_por_mes,
+    "Adicionar Locomotiva": adicionar_locomotiva,
+    "Adicionar Composição": adicionar_composicao,
+    "Adicionar Vagão": adicionar_vagao,
+    "Sair": lambda: print("Saindo do programa.")
 }
 
-# Loop principal
-while True:
-    exibir_menu()
-    escolha = input("Escolha uma opção: ")
-    if escolha in opcoes:
-        opcoes[escolha]()
-    else:
-        print("Opção inválida. Tente novamente.")
+if __name__ == "__main__":
+    exibir_menu(opcoes)

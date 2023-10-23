@@ -1,16 +1,38 @@
-# solicitando dois valores ao usuário
-valor1 = float(input("Digite o primeiro valor:"))
-valor2 = float(input("Digite o segundo valor: "))
+import curses
 
-# realizando a soma dos valores
-soma = valor1 + valor2
+def main(stdscr):
+    curses.curs_set(0)  # Esconde o cursor
+    stdscr.nodelay(1)   # Torna a leitura de teclas não bloqueante
+    stdscr.clear()
 
-# imprimindo o resultado na tela
-print("A soma de", valor1, "+", valor2, "é igual a", soma)
+    menu_options = ["Opção 1", "Opção 2", "Opção 3", "Opção 4"]
+    current_option = 0
 
-print("A soma é igual a", soma)
+    while True:
+        stdscr.clear()
+        height, width = stdscr.getmaxyx()
+        
+        for i, option in enumerate(menu_options):
+            x = width // 2 - len(option) // 2
+            y = height // 2 - len(menu_options) // 2 + i
+            if i == current_option:
+                stdscr.attron(curses.A_REVERSE)
+            stdscr.addstr(y, x, option)
+            if i == current_option:
+                stdscr.attroff(curses.A_REVERSE)
+        
+        stdscr.refresh()
+        
+        key = stdscr.getch()
+        if key == curses.KEY_UP:
+            current_option = (current_option - 1) % len(menu_options)
+        elif key == curses.KEY_DOWN:
+            current_option = (current_option + 1) % len(menu_options)
+        elif key == ord('\n'):
+            stdscr.addstr(height - 1, 0, f"Você selecionou: {menu_options[current_option]}", curses.A_BOLD)
+            stdscr.refresh()
+            stdscr.getch()
+        elif key == ord('q'):
+            break
 
-##Este código solicita ao usuário dois valores,
-# realiza a soma dos mesmos e imprime o resultado na tela.
-# Note que utilizei a função float() para converter as entradas do usuário em números decimais (floats).
-# Caso deseje trabalhar apenas com números inteiros, basta trocar float() por int() no código acima.
+curses.wrapper(main)
